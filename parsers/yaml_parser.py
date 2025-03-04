@@ -1,5 +1,5 @@
 import yaml
-from models import Document, Flow, Step
+from models.base import *
 
 class YamlParser:
     @staticmethod
@@ -10,6 +10,7 @@ class YamlParser:
                 
                 doc = Document(
                     title=data.get('info')['title'],
+                    description=data.get('info')['description'],
                     flows=[]
                 )
                 
@@ -20,9 +21,19 @@ class YamlParser:
                             )
 
                     for s in f['steps']:
-                        workflow.add_step(Step(
-                            id=s['stepId']
+                        step = (Step(
+                            id=s['stepId'],
+                            operation_id=s['operationId'],
+                            description=s['description'],
                             ))
+
+                        for o in s['outputs'].keys():
+                            step.add_output(StepOutput(
+                                name=o
+                                ))
+
+                        workflow.add_step(step)
+
 
                     doc.add_flow(workflow)
 
