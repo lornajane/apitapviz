@@ -3,17 +3,15 @@ from models import Document, Flow, Step
 
 class MarkdownFormatter(BaseFormatter):
     def format(self, document: Document) -> str:
-
         header_level_prefix = "#" #TODO make this configurable
         output = ""
 
+        output += "\n" + header_level_prefix + "# " + document.title + "\n\n"
+        output += document.description + "\n\n"
+            
         for flow in document.flows:
             list_item_no = 1
 
-            output += "\n" + header_level_prefix + "# " + document.title + "\n\n"
-
-            output += document.description + "\n\n"
-            
             for i in flow.steps: # a step in a workflow
                 output += header_level_prefix + "## " + str(list_item_no) + ": " + i.id + "\n\n"
 

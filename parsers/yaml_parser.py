@@ -9,8 +9,8 @@ class YamlParser:
                 data = yaml.safe_load(stream)
                 
                 doc = Document(
-                    title=data.get('info')['title'],
-                    description=data.get('info')['description'],
+                    title=data.get('info', {}).get('title'),
+                    description=data.get('info', {}).get('description', ''),
                     flows=[]
                 )
                 
@@ -27,10 +27,11 @@ class YamlParser:
                             description=s['description'],
                             ))
 
-                        for o in s['outputs'].keys():
-                            step.add_output(StepOutput(
-                                name=o
-                                ))
+                        if 'outputs' in s.keys():
+                            for o in s['outputs'].keys():
+                                step.add_output(StepOutput(
+                                    name=o
+                                    ))
 
                         workflow.add_step(step)
 
